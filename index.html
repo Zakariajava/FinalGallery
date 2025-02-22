@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Accessible Interactive Photo Gallery</title>
+  <title>Galería de Fotos Accesible e Interactiva</title>
   <style>
-    /* Styling for the large display area */
+    /* Área de visualización grande */
     #image {
       width: 600px;
       height: 400px;
-      border: 2px solid #333;
       margin: 20px auto;
+      border: 2px solid #333;
       background-size: cover;
       background-position: center;
       text-align: center;
@@ -17,13 +17,13 @@
       font-size: 24px;
       color: #fff;
     }
-    /* Container for the thumbnail images */
+    /* Contenedor de miniaturas */
     .container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
     }
-    /* Thumbnail image styling */
+    /* Estilo de las imágenes miniatura */
     .thumb {
       width: 100px;
       height: 66px;
@@ -39,59 +39,81 @@
   </style>
 </head>
 <body onload="initGallery()">
-  <!-- Large display area that updates on events -->
-  <div id="image">Hover over or focus on an image to display here.</div>
+  <!-- Área de visualización que se actualizará -->
+  <div id="image">Pasa el cursor o enfoca una imagen para mostrarla.</div>
   
-  <!-- Thumbnails container with six images -->
+  <!-- Contenedor con seis imágenes -->
   <div class="container">
-    <img class="thumb" src="img1.jpg" alt="Sunset over the mountains" 
+    <img class="thumb" src="img1.jpg" alt="Atardecer en las montañas" 
          onmouseover="upDate(this)" onmouseleave="undo()"
-         onfocus="upDate(this)" onblur="undo()">
-    <img class="thumb" src="img2.jpg" alt="Lush forest trail" 
+         onfocus="upDate(this)" onblur="undo()"
+         onclick="selectImage(this)">
+    <img class="thumb" src="img2.jpg" alt="Camino en el bosque" 
          onmouseover="upDate(this)" onmouseleave="undo()"
-         onfocus="upDate(this)" onblur="undo()">
-    <img class="thumb" src="img3.jpg" alt="City skyline at night" 
+         onfocus="upDate(this)" onblur="undo()"
+         onclick="selectImage(this)">
+    <img class="thumb" src="img3.jpg" alt="Horizonte de la ciudad de noche" 
          onmouseover="upDate(this)" onmouseleave="undo()"
-         onfocus="upDate(this)" onblur="undo()">
-    <img class="thumb" src="img4.jpg" alt="Calm beach with blue waters" 
+         onfocus="upDate(this)" onblur="undo()"
+         onclick="selectImage(this)">
+    <img class="thumb" src="img4.jpg" alt="Playa tranquila con aguas azules" 
          onmouseover="upDate(this)" onmouseleave="undo()"
-         onfocus="upDate(this)" onblur="undo()">
-    <img class="thumb" src="img5.jpg" alt="Vibrant autumn leaves" 
+         onfocus="upDate(this)" onblur="undo()"
+         onclick="selectImage(this)">
+    <img class="thumb" src="img5.jpg" alt="Hojas otoñales vibrantes" 
          onmouseover="upDate(this)" onmouseleave="undo()"
-         onfocus="upDate(this)" onblur="undo()">
-    <img class="thumb" src="img6.jpg" alt="Starry night sky" 
+         onfocus="upDate(this)" onblur="undo()"
+         onclick="selectImage(this)">
+    <img class="thumb" src="img6.jpg" alt="Cielo estrellado" 
          onmouseover="upDate(this)" onmouseleave="undo()"
-         onfocus="upDate(this)" onblur="undo()">
+         onfocus="upDate(this)" onblur="undo()"
+         onclick="selectImage(this)">
   </div>
   
   <script>
-    // Function called when the mouse is over or an image gains focus.
+    // Variable global para almacenar la imagen seleccionada
+    let selectedImage = null;
+
+    // Función que se dispara al pasar el cursor o al enfocar una imagen
     function upDate(previewPic) {
-      console.log("Event triggered for image:", previewPic.alt);
-      var displayArea = document.getElementById("image");
-      // Update the text with the image's alt attribute.
+      // Si ya hay una imagen seleccionada y la imagen en hover no es la seleccionada, no se actualiza.
+      if (selectedImage && selectedImage !== previewPic) {
+        return;
+      }
+      console.log("Vista previa de: " + previewPic.alt);
+      let displayArea = document.getElementById("image");
       displayArea.innerHTML = previewPic.alt;
-      // Update the background image with the source of the thumbnail.
       displayArea.style.backgroundImage = "url('" + previewPic.src + "')";
     }
 
-    // Function called when the mouse leaves or an image loses focus.
+    // Función que se dispara al quitar el cursor o al desenfocar una imagen
     function undo() {
-      var displayArea = document.getElementById("image");
-      // Reset the text to its default message.
-      displayArea.innerHTML = "Hover over or focus on an image to display here.";
-      // Reset the background image to an empty URL.
-      displayArea.style.backgroundImage = "url('')";
+      let displayArea = document.getElementById("image");
+      // Si hay una imagen seleccionada, se mantiene su vista
+      if (selectedImage) {
+        displayArea.innerHTML = selectedImage.alt;
+        displayArea.style.backgroundImage = "url('" + selectedImage.src + "')";
+      } else {
+        // Si no hay imagen seleccionada, se vuelve al mensaje por defecto
+        displayArea.innerHTML = "Pasa el cursor o enfoca una imagen para mostrarla.";
+        displayArea.style.backgroundImage = "url('')";
+      }
     }
-    
-    // Function to automatically add tabindex to each thumbnail
-    // so they are keyboard focusable.
+
+    // Función para seleccionar una imagen con clic y fijarla en el área de visualización
+    function selectImage(imgElement) {
+      selectedImage = imgElement;
+      console.log("Imagen seleccionada: " + imgElement.alt);
+      let displayArea = document.getElementById("image");
+      displayArea.innerHTML = imgElement.alt;
+      displayArea.style.backgroundImage = "url('" + imgElement.src + "')";
+    }
+
+    // Función de inicialización que agrega tabindex a cada miniatura para accesibilidad
     function initGallery() {
-      console.log("Page loaded. Adding tabindex attributes to thumbnails.");
-      // Select all elements with the class 'thumb'
-      var thumbnails = document.querySelectorAll(".thumb");
-      // Loop through each thumbnail and add tabindex="0"
-      for (var i = 0; i < thumbnails.length; i++) {
+      console.log("Iniciando galería: agregando tabindex a las miniaturas.");
+      let thumbnails = document.querySelectorAll(".thumb");
+      for (let i = 0; i < thumbnails.length; i++) {
         thumbnails[i].setAttribute("tabindex", "0");
       }
     }
