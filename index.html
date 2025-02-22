@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Accessible Interactive Photo Gallery</title>
+  <style>
+    /* Styling for the large display area */
+    #image {
+      width: 600px;
+      height: 400px;
+      border: 2px solid #333;
+      margin: 20px auto;
+      background-size: cover;
+      background-position: center;
+      text-align: center;
+      line-height: 400px;
+      font-size: 24px;
+      color: #fff;
+    }
+    /* Container for the thumbnail images */
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    /* Thumbnail image styling */
+    .thumb {
+      width: 100px;
+      height: 66px;
+      margin: 10px;
+      border: 1px solid #ddd;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .thumb:hover,
+    .thumb:focus {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body onload="initGallery()">
+  <!-- Large display area that updates on events -->
+  <div id="image">Hover over or focus on an image to display here.</div>
+  
+  <!-- Thumbnails container with six images -->
+  <div class="container">
+    <img class="thumb" src="img1.jpg" alt="Sunset over the mountains" 
+         onmouseover="upDate(this)" onmouseleave="undo()"
+         onfocus="upDate(this)" onblur="undo()">
+    <img class="thumb" src="img2.jpg" alt="Lush forest trail" 
+         onmouseover="upDate(this)" onmouseleave="undo()"
+         onfocus="upDate(this)" onblur="undo()">
+    <img class="thumb" src="img3.jpg" alt="City skyline at night" 
+         onmouseover="upDate(this)" onmouseleave="undo()"
+         onfocus="upDate(this)" onblur="undo()">
+    <img class="thumb" src="img4.jpg" alt="Calm beach with blue waters" 
+         onmouseover="upDate(this)" onmouseleave="undo()"
+         onfocus="upDate(this)" onblur="undo()">
+    <img class="thumb" src="img5.jpg" alt="Vibrant autumn leaves" 
+         onmouseover="upDate(this)" onmouseleave="undo()"
+         onfocus="upDate(this)" onblur="undo()">
+    <img class="thumb" src="img6.jpg" alt="Starry night sky" 
+         onmouseover="upDate(this)" onmouseleave="undo()"
+         onfocus="upDate(this)" onblur="undo()">
+  </div>
+  
+  <script>
+    // Function called when the mouse is over or an image gains focus.
+    function upDate(previewPic) {
+      console.log("Event triggered for image:", previewPic.alt);
+      var displayArea = document.getElementById("image");
+      // Update the text with the image's alt attribute.
+      displayArea.innerHTML = previewPic.alt;
+      // Update the background image with the source of the thumbnail.
+      displayArea.style.backgroundImage = "url('" + previewPic.src + "')";
+    }
+
+    // Function called when the mouse leaves or an image loses focus.
+    function undo() {
+      var displayArea = document.getElementById("image");
+      // Reset the text to its default message.
+      displayArea.innerHTML = "Hover over or focus on an image to display here.";
+      // Reset the background image to an empty URL.
+      displayArea.style.backgroundImage = "url('')";
+    }
+    
+    // Function to automatically add tabindex to each thumbnail
+    // so they are keyboard focusable.
+    function initGallery() {
+      console.log("Page loaded. Adding tabindex attributes to thumbnails.");
+      // Select all elements with the class 'thumb'
+      var thumbnails = document.querySelectorAll(".thumb");
+      // Loop through each thumbnail and add tabindex="0"
+      for (var i = 0; i < thumbnails.length; i++) {
+        thumbnails[i].setAttribute("tabindex", "0");
+      }
+    }
+  </script>
+</body>
+</html>
